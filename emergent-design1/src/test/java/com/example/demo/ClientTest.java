@@ -5,10 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,39 +12,59 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ClientTest {
-	
-	
-	@Mock
+
 	IEncrypt encrypt;
-	
-	@Mock
+
 	Transmit transmitter;
-	
-	
+
 	@Autowired
 	ConfigFactory configFactory;
-	
+
 	@Autowired
 	Client client;
-	
+
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
+		encrypt = new Encrypt64();
+		transmitter = new Transmit();
 		configFactory.setEncrypt(encrypt);
 		configFactory.setTransmitter(transmitter);
 	}
-	
+
 	@Test
-	public void getAndSendStatusOfAChip() throws Exception {
+	public void getAndSendStatusOfAChipForPGP64Encryption() throws Exception {
 		String ENCRYPTED_STATUS = "PGP64 Encryption";
-	
-		Mockito.when(encrypt.encrypt(Mockito.any())).thenReturn(ENCRYPTED_STATUS);
-		Mockito.doCallRealMethod().when(transmitter).transmit(ENCRYPTED_STATUS);
-		
+
 		Chip chip = client.createChip();
 		String status = chip.getAndSendStatus();
-		
+
 		assertEquals(ENCRYPTED_STATUS, status);
+	}
+
+	@Test
+	public void getAndSendStatusOfAChipForNullEncryption() throws Exception {
+		String NULL_ENCRYPTED_MESSAGE = "Null_Encrypted_Message";
+
+		encrypt = new NullEncrypt();
+		configFactory.setEncrypt(encrypt);
+
+		Chip chip = client.createChip();
+		String status = chip.getAndSendStatus();
+
+		assertEquals(NULL_ENCRYPTED_MESSAGE, status);
+	}
+
+	@Test
+	public void getAndSendStatusOfAChipForPGP128Encryption() throws Exception {
+		String NULL_ENCRYPTED_MESSAGE = "PGP128 Encryption";
+
+		encrypt = new Encrypt128();
+		configFactory.setEncrypt(encrypt);
+
+		Chip chip = client.createChip();
+		String status = chip.getAndSendStatus();
+
+		assertEquals(NULL_ENCRYPTED_MESSAGE, status);
 	}
 
 }
