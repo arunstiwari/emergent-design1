@@ -16,12 +16,17 @@ public class ClientTest {
 	@Mock
 	Encrypt encrypt;
 	
+	@Mock
+	Transmit transmitter;
+	
 	@Test
 	public void getAndSendStatusOfAChip() throws Exception {
 		Client client = new Client();
 		String ENCRYPTED_STATUS = "PGP64 Encryption";
 		Mockito.when(encrypt.encrypt(Mockito.any())).thenReturn(ENCRYPTED_STATUS);
+		Mockito.doCallRealMethod().when(transmitter).transmit(ENCRYPTED_STATUS);
 		Chip chip = client.createChip();
+		chip.setTransmitter(transmitter);
 		chip.setEncryptionForm(encrypt);
 		String status = chip.getAndSendStatus();
 		assertEquals(ENCRYPTED_STATUS, status);

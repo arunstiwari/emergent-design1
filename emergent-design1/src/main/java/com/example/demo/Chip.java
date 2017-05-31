@@ -4,6 +4,7 @@ public class Chip {
 
 	private String status="Non Encrypted";
 	private Encrypt encrypt;
+	private Transmit transmitter;
 	
 
 	public String getAndSendStatus() {
@@ -13,7 +14,7 @@ public class Chip {
 	}
 
 	private void transmit() {
-		System.out.println("Transmitted the chip status: "+getStatus());
+		transmitter.transmit(getStatus());
 	}
 
 	private void encrypt() {
@@ -26,6 +27,10 @@ public class Chip {
 
 	public void setEncryptionForm(Encrypt encrypt) {
 		this.encrypt = encrypt;
+	}
+
+	public void setTransmitter(Transmit transmitter) {
+		this.transmitter = transmitter;
 	}
 
 }
