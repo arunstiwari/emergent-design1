@@ -3,6 +3,7 @@ package com.example.demo;
 public class Chip {
 
 	private String status="Non Encrypted";
+	private Encrypt encrypt;
 	
 
 	public String getAndSendStatus() {
@@ -16,11 +17,15 @@ public class Chip {
 	}
 
 	private void encrypt() {
-		this.status= "PGP64 Encryption";
+		this.status= encrypt.encrypt(getStatus());
 	}
 
 	private String getStatus() {
 		return status;
+	}
+
+	public void setEncryptionForm(Encrypt encrypt) {
+		this.encrypt = encrypt;
 	}
 
 }

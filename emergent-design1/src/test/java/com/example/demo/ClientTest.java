@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -11,12 +13,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class ClientTest {
 	
+	@Mock
+	Encrypt encrypt;
+	
 	@Test
 	public void getAndSendStatusOfAChip() throws Exception {
 		Client client = new Client();
+		String ENCRYPTED_STATUS = "PGP64 Encryption";
+		Mockito.when(encrypt.encrypt(Mockito.any())).thenReturn(ENCRYPTED_STATUS);
 		Chip chip = client.createChip();
+		chip.setEncryptionForm(encrypt);
 		String status = chip.getAndSendStatus();
-		assertEquals("PGP64 Encryption", status);
+		assertEquals(ENCRYPTED_STATUS, status);
 	}
 
 }
