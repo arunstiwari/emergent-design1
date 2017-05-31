@@ -8,8 +8,9 @@ public class Chip {
 
 	private String status="Non Encrypted";
 	
-	@Autowired
-	private ConfigFactory config;
+	private Transmit transmit;
+
+	private IEncrypt encrypt;
 	
 	public String getAndSendStatus() {
 		encrypt();
@@ -18,15 +19,25 @@ public class Chip {
 	}
 
 	private void transmit() {
-		this.config.getTransmit().transmit(getStatus());
+		this.transmit.transmit(getStatus());
 	}
 
 	private void encrypt() {
-		this.status= this.config.getEncrypt().encrypt(getStatus());
+		this.status= this.encrypt.encrypt(getStatus());
 	}
 
 	private String getStatus() {
 		return status;
 	}
+
+	public void setTransmitter(Transmit transmit) {
+		this.transmit = transmit;
+	}
+
+	public void setEncrypt(IEncrypt encrypt) {
+		this.encrypt = encrypt;
+	}
+	
+	
 
 }

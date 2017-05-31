@@ -9,7 +9,12 @@ public class Client {
 	@Autowired
 	Chip chip;
 	
+	@Autowired
+	ConfigFactory configFactory;
+	
 	public Chip createChip() {
+		chip.setTransmitter(configFactory.getTransmit());
+		chip.setEncrypt(configFactory.getEncrypt());
 		return chip;
 	}
 
